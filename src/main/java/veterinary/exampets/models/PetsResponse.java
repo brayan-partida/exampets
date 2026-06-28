@@ -11,13 +11,12 @@ public class PetsResponse implements Serializable {
     String transactionId;
     LocalDateTime dateCreated;
     Status status;
-
+    String name;
 
     public LocalDateTime getDateCreated() {
         return LocalDateTime.now();
     }
 
-    String name;
 
     public String getName() {
         return name;

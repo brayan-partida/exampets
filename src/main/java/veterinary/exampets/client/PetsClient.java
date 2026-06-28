@@ -11,8 +11,8 @@ import veterinary.exampets.models.Pet;
 @FeignClient(name = "pet", url = "${veterinary.service.pets}")
 public interface PetsClient {
 
-    @GetMapping("/{id}")
-    ResponseEntity<Pet> getIdPets(@PathVariable int id);
+    @GetMapping("/{idPet}")
+    ResponseEntity<Pet> getIdPets(@PathVariable int idPet);
 
     @PostMapping
     ResponseEntity<Pet> savePet(@RequestBody Pet pet);
