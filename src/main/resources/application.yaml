@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: exampets
+
+veterinary:
+  service:
+    pets: https://petstore.swagger.io/v2/pet
