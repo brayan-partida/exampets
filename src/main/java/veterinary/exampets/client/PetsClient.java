@@ -1,5 +1,4 @@
 package veterinary.exampets.client;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +10,19 @@ import veterinary.exampets.models.Pet;
 @FeignClient(name = "pet", url = "${veterinary.service.pets}")
 public interface PetsClient {
 
+    /**
+     * getPets
+     * @param idPet
+     * @return
+     */
     @GetMapping("/{idPet}")
     ResponseEntity<Pet> getIdPets(@PathVariable int idPet);
 
+    /**
+     * SavePets
+     * @param pet
+     * @return
+     */
     @PostMapping
     ResponseEntity<Pet> savePet(@RequestBody Pet pet);
 }

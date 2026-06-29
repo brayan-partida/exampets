@@ -1,16 +1,21 @@
 package veterinary.exampets.models;
 
 
+import com.fasterxml.jackson.databind.annotation.EnumNaming;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import veterinary.exampets.models.enums.Status;
 
 import java.util.List;
 
 public class Pet {
+
     private Long id;
- //   private Category category;
+    @NotBlank(message = "Pet name is required and cannot be empty")
     private String name; // Required
-  //  private List<String> photoUrls; // Required
-  //  private List<Tag> tags;
+    //  private List<String> photoUrls; // Required
+    //  private List<Tag> tags;
+    @NotNull(message = "Pet status is required")
     private Status status;
 
     public Pet() {

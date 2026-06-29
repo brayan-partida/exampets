@@ -11,11 +11,9 @@ import java.util.UUID;
 @Component
 public class PetsResponseConverter extends GlobalMapper<Pet, PetsResponse> {
     UUID uuid = UUID.randomUUID();
-    LocalDateTime dateTime = LocalDateTime.now();
 
     @Override
     public PetsResponse fromModelToDto(Pet model) {
-
         PetsResponse response = new PetsResponse();
         response.setName(model.getName());
         response.setStatus(model.getStatus());

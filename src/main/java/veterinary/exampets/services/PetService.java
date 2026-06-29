@@ -1,10 +1,13 @@
 package veterinary.exampets.services;
 
-import org.springframework.http.HttpStatus;
+import org.apache.coyote.BadRequestException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import veterinary.exampets.client.PetsClient;
-import veterinary.exampets.mapper.GlobalMapper;
+
 import veterinary.exampets.mapper.converters.PetsResponseConverter;
 import veterinary.exampets.models.Pet;
 import veterinary.exampets.models.PetsResponse;
@@ -13,6 +16,7 @@ import veterinary.exampets.models.PetsResponse;
 public class PetService {
     PetsResponseConverter globalMapper;
     PetsClient petsClient;
+    private static final Logger logger = LogManager.getLogger(PetService.class);
 
 
     public PetService(PetsResponseConverter globalMapper, PetsClient petsClient) {
@@ -26,9 +30,20 @@ public class PetService {
      * @param id
      * @return
      */
-    public ResponseEntity<?> getPetId(int id) {
+    public ResponseEntity<?> getPetId(int id) throws BadRequestException {
+        // 1. Service-side Validation
+        if (id <= 0) {
+            throw new BadRequestException("Invalid Pet ID. ID must be greater than 0.");
+        }
+
         ResponseEntity<Pet> responseEntity = petsClient.getIdPets(id);
-        return new ResponseEntity<>(responseEntity.getBody()  , responseEntity.getStatusCode());
+
+        // 2. Client Response Validation
+        if (responseEntity.getStatusCode().is4xxClientError()) {
+            throw new BadRequestException("The external pets service rejected this request.");
+        }
+
+        return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
     }
 
     /**
@@ -40,7 +55,7 @@ public class PetService {
     public ResponseEntity<?> postPet(Pet pet) {
         ResponseEntity<Pet> responseEntity = petsClient.savePet(pet);
         PetsResponse petsResponse = globalMapper.fromModelToDto(responseEntity.getBody());
-        System.out.println("values: created: "+petsResponse.getDateCreated()+", TranssactionId:" +petsResponse.getTransactionId()+", Name:" +petsResponse.getName());
+        logger.info("Pet Saved: created: {}, TranssactionId: {}, Name: {}", petsResponse.getDateCreated(), petsResponse.getTransactionId(), petsResponse.getName());
         return new ResponseEntity<>(petsResponse, responseEntity.getStatusCode());
     }
 
